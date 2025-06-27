@@ -1,65 +1,66 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Mobile Menu Toggle
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const mainNav = document.querySelector('.main-nav');
     
-    mobileMenuBtn.addEventListener('click', function() {
+
+    mobileMenuBtn.addEventListener('click', function () {
         mainNav.classList.toggle('active');
     });
-    
+
     // Hero Slider
     const slides = document.querySelectorAll('.slide');
     const prevBtn = document.querySelector('.slider-controls .prev');
     const nextBtn = document.querySelector('.slider-controls .next');
     let currentSlide = 0;
-    
+
     function showSlide(index) {
         slides.forEach(slide => slide.classList.remove('active'));
         slides[index].classList.add('active');
     }
-    
+
     function nextSlide() {
         currentSlide = (currentSlide + 1) % slides.length;
         showSlide(currentSlide);
     }
-    
+
     function prevSlide() {
         currentSlide = (currentSlide - 1 + slides.length) % slides.length;
         showSlide(currentSlide);
     }
-    
+
     nextBtn.addEventListener('click', nextSlide);
     prevBtn.addEventListener('click', prevSlide);
-    
+
     // Auto slide change every 5 seconds
     setInterval(nextSlide, 5000);
-    
+
     // Testimonial Slider
     const testimonials = document.querySelectorAll('.testimonial');
     const dots = document.querySelectorAll('.dot');
     let currentTestimonial = 0;
-    
+
     function showTestimonial(index) {
         testimonials.forEach(testimonial => testimonial.classList.remove('active'));
         dots.forEach(dot => dot.classList.remove('active'));
-        
+
         testimonials[index].classList.add('active');
         dots[index].classList.add('active');
     }
-    
+
     dots.forEach((dot, index) => {
         dot.addEventListener('click', () => {
             currentTestimonial = index;
             showTestimonial(currentTestimonial);
         });
     });
-    
+
     // Auto testimonial change every 5 seconds
     setInterval(() => {
         currentTestimonial = (currentTestimonial + 1) % testimonials.length;
         showTestimonial(currentTestimonial);
     }, 5000);
-    
+
     // Shopping Cart Functionality
     const cartIcon = document.getElementById('cart-icon');
     const cartSidebar = document.getElementById('cart-sidebar');
@@ -68,9 +69,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const cartItemsContainer = document.getElementById('cart-items');
     const cartCount = document.querySelector('.cart-count');
     const totalPriceElement = document.querySelector('.total-price');
-    
+
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    
+
     // Sample product data
     const products = [
         {
@@ -146,16 +147,16 @@ document.addEventListener('DOMContentLoaded', function() {
             badge: 'Trending'
         }
     ];
-    
+
     // Display products
     function displayProducts() {
         const productGrid = document.getElementById('product-grid');
         productGrid.innerHTML = '';
-        
+
         products.forEach(product => {
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
-            
+
             productCard.innerHTML = `
                 ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
                 <div class="product-thumb">
@@ -175,19 +176,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
                 </div>
             `;
-            
+
             productGrid.appendChild(productCard);
         });
     }
-    
+
     // Add to cart
     function addToCart(productId) {
         const product = products.find(p => p.id === productId);
-        
+
         if (!product) return;
-        
+
         const existingItem = cart.find(item => item.id === productId);
-        
+
         if (existingItem) {
             existingItem.quantity += 1;
         } else {
@@ -199,36 +200,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 quantity: 1
             });
         }
-        
+
         updateCart();
         saveCartToLocalStorage();
     }
-    
+
     // Remove from cart
     function removeFromCart(productId) {
         cart = cart.filter(item => item.id !== productId);
         updateCart();
         saveCartToLocalStorage();
     }
-    
+
     // Update quantity
     function updateQuantity(productId, newQuantity) {
         const item = cart.find(item => item.id === productId);
-        
+
         if (item) {
             item.quantity = parseInt(newQuantity) || 1;
         }
-        
+
         updateCart();
         saveCartToLocalStorage();
     }
-    
+
     // Update cart UI
     function updateCart() {
         // Update cart count
         const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
         cartCount.textContent = totalItems;
-        
+
         // Update cart items
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = `
@@ -240,16 +241,16 @@ document.addEventListener('DOMContentLoaded', function() {
             totalPriceElement.textContent = '$0.00';
         } else {
             cartItemsContainer.innerHTML = '';
-            
+
             let totalPrice = 0;
-            
+
             cart.forEach(item => {
                 const itemTotal = item.price * item.quantity;
                 totalPrice += itemTotal;
-                
+
                 const cartItem = document.createElement('div');
                 cartItem.className = 'cart-item';
-                
+
                 cartItem.innerHTML = `
                     <div class="cart-item-img">
                         <img src="${item.image}" alt="${item.name}">
@@ -265,13 +266,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                 `;
-                
+
                 cartItemsContainer.appendChild(cartItem);
             });
-            
+
             totalPriceElement.textContent = `$${totalPrice.toFixed(2)}`;
         }
-        
+
         // Add event listeners to cart items
         document.querySelectorAll('.cart-item-remove').forEach(button => {
             button.addEventListener('click', (e) => {
@@ -279,29 +280,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 removeFromCart(productId);
             });
         });
-        
+
         document.querySelectorAll('.quantity-btn.minus').forEach(button => {
             button.addEventListener('click', (e) => {
                 const productId = parseInt(button.getAttribute('data-id'));
                 const item = cart.find(item => item.id === productId);
-                
+
                 if (item && item.quantity > 1) {
                     updateQuantity(productId, item.quantity - 1);
                 }
             });
         });
-        
+
         document.querySelectorAll('.quantity-btn.plus').forEach(button => {
             button.addEventListener('click', (e) => {
                 const productId = parseInt(button.getAttribute('data-id'));
                 const item = cart.find(item => item.id === productId);
-                
+
                 if (item) {
                     updateQuantity(productId, item.quantity + 1);
                 }
             });
         });
-        
+
         document.querySelectorAll('.quantity-input').forEach(input => {
             input.addEventListener('change', (e) => {
                 const productId = parseInt(input.getAttribute('data-id'));
@@ -309,12 +310,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-    
+
     // Save cart to localStorage
     function saveCartToLocalStorage() {
         localStorage.setItem('cart', JSON.stringify(cart));
     }
-    
+
     // Load cart from localStorage
     function loadCartFromLocalStorage() {
         const savedCart = localStorage.getItem('cart');
@@ -323,50 +324,50 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCart();
         }
     }
-    
+
     // Toggle cart sidebar
     function toggleCartSidebar() {
         cartSidebar.classList.toggle('active');
         cartOverlay.classList.toggle('active');
         document.body.style.overflow = cartSidebar.classList.contains('active') ? 'hidden' : 'auto';
     }
-    
+
     // Event listeners
     cartIcon.addEventListener('click', toggleCartSidebar);
     closeCart.addEventListener('click', toggleCartSidebar);
     cartOverlay.addEventListener('click', toggleCartSidebar);
-    
+
     // Initialize
     displayProducts();
     loadCartFromLocalStorage();
-    
+
     // Add event listeners to all "Add to Cart" buttons
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (e.target.classList.contains('add-to-cart')) {
             const productId = parseInt(e.target.getAttribute('data-id'));
             addToCart(productId);
-            
+
             // Show cart sidebar when adding an item
             if (!cartSidebar.classList.contains('active')) {
                 toggleCartSidebar();
             }
         }
     });
-    
+
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+        anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
-            
+
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 targetElement.scrollIntoView({
                     behavior: 'smooth'
                 });
-                
+
                 // Close mobile menu if open
                 if (mainNav.classList.contains('active')) {
                     mainNav.classList.remove('active');

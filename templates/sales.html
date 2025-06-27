@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Ventas</title>
+ 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f4f7fa; color: #333; padding: 20px; }
+    h1 { margin-bottom: 20px; }
+    .filters { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
+    .filters input[type=date] { padding: 5px; border: 1px solid #ccc; border-radius: 4px; }
+    .filters button { padding: 6px 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    .filters button:hover { background: #0056b3; }
+    .cards { display: flex; gap: 20px; margin-bottom: 30px; }
+    .card { background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex: 1; }
+    .card h2 { font-size: 1.2rem; margin-bottom: 8px; color: #555; }
+    .card p { font-size: 1.6rem; font-weight: bold; }
+    .charts { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px; }
+    .chart-container { background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex: 1 1 300px; }
+    canvas { max-width: 100%; }
+    .tables { display: flex; gap: 20px; flex-wrap: wrap; }
+    table { border-collapse: collapse; width: 100%; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    th, td { padding: 8px 12px; border-bottom: 1px solid #eee; text-align: left; }
+    thead { background: #007bff; color: white; }
+    tbody tr:hover { background: #f1f9ff; }
+    .table-container { flex: 1 1 400px; }
+    .table-container h3 { margin-bottom: 10px; }
+  </style>
+  </head>
+  <body>
+    <h1>Dashboard de Ventas</h1>
+    <a href="/admin" style="
+  display: inline-block;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #ffc163, #ff9267);
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  margin-bottom: 3%!important;
+" 
+onmouseover="this.style.background='linear-gradient(135deg, #3551a3, #0f1b3d)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.3)';"
+onmouseout="this.style.background='linear-gradient(135deg, #4b6cb7, #182848)'; this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)';"
+onmousedown="this.style.transform='scale(0.98)';"
+onmouseup="this.style.transform='translateY(-2px)';">
+  Regresar
+</a>
+
+    <div class="filters">
+      <label>Desde: <input type="date" id="date-from"></label>
+      <label>Hasta: <input type="date" id="date-to"></label>
+      <button id="filter-btn">Filtrar</button>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h2>Total Ventas</h2>
+        <p id="total-sales">0</p>
+      </div>
+      <div class="card">
+        <h2>Ingresos</h2>
+        <p id="total-income">$0.00</p>
+      </div>
+      <div class="card">
+        <h2>Producto Más Vendido</h2>
+        <p id="top-product">-</p>
+      </div>
+    </div>
+
+    <div class="charts">
+      <div class="chart-container">
+        <h3>Ventas por Fecha</h3>
+        <canvas id="sales-line-chart"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3>Distribución de Ventas por Producto</h3>
+        <canvas id="sales-pie-chart"></canvas>
+      </div>
+    </div>
+
+    <div class="tables">
+      <div class="table-container">
+        <h3>Lista de Ventas</h3>
+        <table id="ventas-table">
+          <thead><tr><th>ID</th><th>Cédula</th><th>Cliente</th><th>Fecha</th><th>Total</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="table-container">
+        <h3>Detalles de Venta</h3>
+        <table id="detalles-table">
+          <thead><tr><th>ID Venta</th><th>ID
+                Producto</th><th>Detalle</th><th>Cant.</th><th>Precio
+                U.</th><th>Sub total</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+    const dateFrom = document.getElementById('date-from');
+    const dateTo = document.getElementById('date-to');
+    const filterBtn = document.getElementById('filter-btn');
+
+    const totalSalesEl = document.getElementById('total-sales');
+    const totalIncomeEl = document.getElementById('total-income');
+    const topProductEl = document.getElementById('top-product');
+
+    const ventasTableBody = document.querySelector('#ventas-table tbody');
+    const detallesTableBody = document.querySelector('#detalles-table tbody');
+
+    let lineChart, pieChart;
+
+    async function fetchData() {
+      const from = dateFrom.value;
+      const to = dateTo.value;
+      // APIs 
+      const [resResumen, resTop, resVentas] = await Promise.all([
+        fetch(`/api/ventas/resumen?from=${from}&to=${to}`),
+        fetch(`/api/ventas/masvendido?from=${from}&to=${to}`),
+        fetch(`/api/ventas?from=${from}&to=${to}`)
+      ]);
+
+      const resumen = await resResumen.json();
+ 
+      const ventas = await resVentas.json();
+
+      const topStats = await resTop.json(); 
+if (topStats.length) {
+  const top = topStats[0];
+  totalSalesEl.textContent   = resumen.totalVentas;
+  totalIncomeEl.textContent  = `$${resumen.ingresos.toFixed(2)}`;
+  topProductEl.textContent   = `${top.nombre} (${top.totalCantidad})`;
+} else {
+  topProductEl.textContent = '-';
+}
+
+
+  
+      ventasTableBody.innerHTML = '';
+      ventas.forEach(v => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${v.id}</td>
+          <td>${v.cedula_cliente}</td>
+          <td>${v.nombre_cliente}</td>
+          <td>${v.fecha}</td>
+          <td>$${v.total.toFixed(2)}</td>
+        `;
+        tr.addEventListener('click', () => loadDetalles(v.id));
+        ventasTableBody.appendChild(tr);
+      });
+
+  
+      const fechas = ventas.map(v => v.fecha.split(' ')[0]);
+      const montos = ventas.map(v => v.total);
+      const prodLabels = ventas.map(v => v.nombre_cliente);
+
+      
+      if (lineChart) lineChart.destroy();
+      lineChart = new Chart(document.getElementById('sales-line-chart'), {
+        type: 'line',
+        data: { labels: fechas, datasets: [{ label: 'Total Venta', data: montos, fill: false, borderColor: '#007bff' }] }
+      });
+
+      
+      if (pieChart) pieChart.destroy();
+      pieChart = new Chart(document.getElementById('sales-pie-chart'), {
+        type: 'pie',
+        data: { labels: prodLabels, datasets: [{ data: montos }] }
+      });
+    }
+
+    async function loadDetalles(idVenta) {
+      const res = await fetch(`/api/detalles_ventas/${idVenta}`);
+      const detalles = await res.json();
+      detallesTableBody.innerHTML = '';
+      detalles.forEach(d => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${d.id_venta}</td>
+          <td>${d.id_producto}</td>
+          <td>${d.detalle}</td>
+          <td>${d.cantidad}</td>
+          <td>$${d.precio_uni.toFixed(2)}</td>
+          <td>$${d.sub_total.toFixed(2)}</td>
+        `;
+        detallesTableBody.appendChild(tr);
+      });
+    }
+
+    filterBtn.addEventListener('click', fetchData);
+
+     
+    const today = new Date().toISOString().slice(0,10);
+    dateFrom.value = today;
+    dateTo.value = today;
+    fetchData();
+  </script>
+  </body>
+</html>

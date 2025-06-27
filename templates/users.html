@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD Usuarios</title>
+  <style>
+ 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f7; color: #333; }
+    h1 { margin-bottom: 20px; color: #444; }
+    .container { display: flex; flex-wrap: wrap; gap: 20px; }
+    .form-container, .table-container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .form-container { flex: 1 1 300px; }
+    .table-container { flex: 2 1 500px; }
+    label { display: block; margin-bottom: 5px; font-weight: 600; }
+    input, select, textarea { width: 100%; padding: 8px 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; }
+    textarea { resize: vertical; height: 80px; }
+    button { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+    button:hover { opacity: 0.9; }
+    .btn-primary { background: #0066cc; color: #fff; }
+    .btn-secondary { background: #ccc; color: #333; margin-left: 10px; }
+    .btn-danger { background: #cc0000; color: #fff; }
+    .search-container { margin-bottom: 15px; }
+    #search { max-width: 300px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; }
+    th { background: #f0f0f0; }
+    tr:hover { background: #fafafa; }
+    .action-btn { margin-right: 5px; }
+    @media(max-width: 768px) { .container { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <h1>Gestión de Usuarios</h1>
+  <a href="/admin" style="
+  display: inline-block;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #ffc163, #ff9267);
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  margin-bottom: 3%!important;
+" 
+onmouseover="this.style.background='linear-gradient(135deg, #3551a3, #0f1b3d)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.3)';"
+onmouseout="this.style.background='linear-gradient(135deg, #4b6cb7, #182848)'; this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)';"
+onmousedown="this.style.transform='scale(0.98)';"
+onmouseup="this.style.transform='translateY(-2px)';">
+  Regresar
+</a>
+  <div class="container">
+    <div class="form-container">
+      <h2 id="form-title">Crear Usuario</h2>
+      <form id="user-form">
+        <label for="cedula">Cédula</label>
+        <input type="text" id="cedula" required>
+        
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" required>
+
+        <label for="rol">Rol</label>
+        <select id="rol" required>
+          <option value="Administrador">Administrador</option>
+          <option value="Usuario">Usuario</option>
+        </select>
+
+        <label for="user">Usuario</label>
+        <input type="text" id="user" required>
+
+        <label for="pass">Contraseña</label>
+        <input type="password" id="pass" required>
+
+        <label for="notas">Notas</label>
+        <textarea id="notas"></textarea>
+
+        <button type="submit" class="btn-primary" id="create-btn">Crear</button>
+        <button type="button" class="btn-secondary" id="cancel-btn">Cancelar</button>
+      </form>
+    </div>
+
+    <div class="table-container">
+      <div class="search-container">
+        <input type="text" id="search" placeholder="Buscar por cédula o nombre...">
+      </div>
+      <table id="usuarios-table">
+        <thead>
+          <tr><th>Cédula</th><th>Nombre</th><th>Rol</th><th>Usuario</th><th>Notas</th><th>Acciones</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('user-form');
+      const titulo = document.getElementById('form-title');
+      const createBtn = document.getElementById('create-btn');
+      const cancelBtn = document.getElementById('cancel-btn');
+      const searchInput = document.getElementById('search');
+      const tableBody = document.querySelector('#usuarios-table tbody');
+
+      let users = [];
+      let editCedula = null;
+
+      async function fetchUsers() {
+        const res = await fetch('/api/usuarios');
+        users = await res.json();
+        renderTable(users);
+      }
+
+      function renderTable(list) {
+        tableBody.innerHTML = '';
+        list.forEach(u => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${u.cedula}</td>
+            <td>${u.nombre}</td>
+            <td>${u.rol}</td>
+            <td>${u.user}</td>
+            <td>${u.notas}</td>
+            <td>
+              <button class="btn-primary action-btn" data-cedula="${u.cedula}" data-action="edit">Editar</button>
+              <button class="btn-danger action-btn" data-cedula="${u.cedula}" data-action="delete">Eliminar</button>
+            </td>
+          `;
+          tableBody.appendChild(tr);
+        });
+      }
+
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        const payload = {
+          cedula: document.getElementById('cedula').value,
+          nombre: document.getElementById('nombre').value,
+          rol: document.getElementById('rol').value,
+          user: document.getElementById('user').value,
+          pass: document.getElementById('pass').value,
+          notas: document.getElementById('notas').value
+        };
+        if (editCedula) {
+          await fetch(`/api/usuarios/${editCedula}`, {
+            method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
+          });
+        } else {
+          await fetch('/api/usuarios', {
+            method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
+          });
+        }
+        resetForm();
+        fetchUsers();
+      });
+
+      tableBody.addEventListener('click', async e => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const ced = btn.dataset.cedula;
+        if (btn.dataset.action === 'edit') {
+          const user = users.find(u => u.cedula === ced);
+          document.getElementById('cedula').value = user.cedula;
+          document.getElementById('nombre').value = user.nombre;
+          document.getElementById('rol').value = user.rol;
+          document.getElementById('user').value = user.user;
+          document.getElementById('pass').value = '';
+          document.getElementById('notas').value = user.notas;
+          editCedula = ced;
+          titulo.textContent = 'Editar Usuario';
+          createBtn.textContent = 'Actualizar';
+        } else if (btn.dataset.action === 'delete') {
+          if (confirm('¿Eliminar este usuario?')) {
+            await fetch(`/api/usuarios/${ced}`, { method: 'DELETE' });
+            fetchUsers();
+          }
+        }
+      });
+
+      cancelBtn.addEventListener('click', () => resetForm());
+
+      searchInput.addEventListener('input', () => {
+        const term = searchInput.value.toLowerCase();
+        renderTable(users.filter(u =>
+          u.cedula.includes(term) || u.nombre.toLowerCase().includes(term)
+        ));
+      });
+
+      function resetForm() {
+        form.reset(); editCedula = null;
+        titulo.textContent = 'Crear Usuario';
+        createBtn.textContent = 'Crear';
+      }
+
+ 
+      fetchUsers();
+    });
+  </script>
+</body>
+</html>

@@ -29,6 +29,12 @@ func main() {
 	}
 
 	r := gin.Default()
+	r.Use(func(c *gin.Context) {
+		c.Writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		c.Writer.Header().Set("Pragma", "no-cache")
+		c.Writer.Header().Set("Expires", "0")
+		c.Next()
+	})
 
 	// Servir archivos estáticos y templates
 	r.Static("/static", "./static")
@@ -44,8 +50,24 @@ func main() {
 	r.GET("/login", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "login.html", gin.H{"title": "Iniciar Sesión"})
 	})
+	r.GET("/admin", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "admin.html", gin.H{"title": "Iniciar Sesión"})
+	})
 
-	// Rutas API REST para productos
+	r.GET("/users", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "users.html", gin.H{"title": "Iniciar Sesión"})
+	})
+	r.GET("/productsx", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "productsx.html", gin.H{"title": "Iniciar Sesión"})
+	})
+	r.GET("/sales", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "sales.html", gin.H{"title": "Iniciar Sesión"})
+	})
+	r.GET("/clients", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "clients.html", gin.H{"title": "Iniciar Sesión"})
+	})
+
+	// Rutas API REST
 	api := r.Group("/api")
 	{
 		api.GET("/productos", getProductos)
@@ -54,10 +76,13 @@ func main() {
 		api.PUT("/productos/:id", updateProducto)
 		api.DELETE("/productos/:id", deleteProducto)
 
+		api.POST("/login", login)
+
 		api.GET("/usuarios", getUsuarios)
 		api.POST("/usuarios", createUsuario)
 		api.PUT("/usuarios/:cedula", updateUsuario)
 		api.DELETE("/usuarios/:cedula", deleteUsuario)
+		api.GET("/usuarios/:cedula", getUsuarioByCedulax)
 
 		api.GET("/clientes", getClientes)
 		api.POST("/clientes", createCliente)
@@ -65,14 +90,21 @@ func main() {
 		api.DELETE("/clientes/:cedula", deleteCliente)
 
 		api.GET("/ventas", getVentas)
+		api.GET("/ventas/max", getVentasMaxID)
 		api.POST("/ventas", createVenta)
 		api.PUT("/ventas/:id", updateVenta)
 		api.DELETE("/ventas/:id", deleteVenta)
 
 		api.GET("/detalles_ventas", getDetallesVenta)
-		api.GET("/detalles_ventas/:id_venta", getDetalleByVentaID)
 		api.POST("/detalles_ventas", createDetalleVenta)
+		api.GET("/detalles_ventas/:id_venta", getDetalleByVentaID)
 		api.DELETE("/detalles_ventas/:id_venta/:id_producto", deleteDetalleVenta)
+
+		api.GET("/ventasx", getVentasx)              // ahora soporta ?from=&to=
+		api.GET("/ventas/resumen", getResumenVentas) // devuelve totalVentas & ingresos
+		api.GET("/ventas/masvendido", getMasVendido) // top productos en rango
+		// tus endpoints anteriores para POST/PUT/DELETE
+
 	}
 
 	// Iniciar servidor
@@ -142,6 +174,129 @@ func getProductos(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, productos)
+}
+
+// ResumenVentas agrupa el total de ventas y sumatoria de ingresos
+func getResumenVentas(c *gin.Context) {
+	from, to := c.Query("from"), c.Query("to")
+	var totalVentas int
+	var ingresos float64
+
+	err := db.QueryRow(
+		`SELECT 
+            COUNT(*) AS total_ventas, 
+            IFNULL(SUM(total),0) AS ingresos 
+         FROM ventas
+         WHERE fecha BETWEEN ? AND ?`,
+		from, to,
+	).Scan(&totalVentas, &ingresos)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"totalVentas": totalVentas,
+		"ingresos":    ingresos,
+	})
+}
+
+// getVentas ahora filtra por rango opcional de fechas
+func getVentasx(c *gin.Context) {
+	from, to := c.Query("from"), c.Query("to")
+
+	query := `SELECT id, cedula_cliente, nombre_cliente, fecha, total
+              FROM ventas`
+	args := []interface{}{}
+	if from != "" && to != "" {
+		query += " WHERE fecha BETWEEN ? AND ?"
+		args = append(args, from, to)
+	}
+	query += " ORDER BY fecha"
+
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	defer rows.Close()
+
+	var ventas []Venta
+	for rows.Next() {
+		var v Venta
+		if err := rows.Scan(&v.ID, &v.CedulaCliente, &v.NombreCliente, &v.Fecha, &v.Total); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		ventas = append(ventas, v)
+	}
+	c.JSON(http.StatusOK, ventas)
+}
+
+// ProductoVend struct para el más vendido
+type ProductoVend struct {
+	IDProducto    int     `json:"id_producto"`
+	Nombre        string  `json:"nombre"`
+	TotalCantidad int     `json:"totalCantidad"`
+	Ingresos      float64 `json:"ingresos"`
+}
+
+// getMasVendido devuelve los top 5 productos más vendidos en el rango
+func getMasVendido(c *gin.Context) {
+	from, to := c.Query("from"), c.Query("to")
+
+	rows, err := db.Query(
+		`SELECT 
+            dv.id_producto,
+            p.name,
+            SUM(dv.cantidad) AS totalCantidad,
+            SUM(dv.sub_total)   AS ingresos
+         FROM detalle_venta dv
+         JOIN productos p ON dv.id_producto = p.id
+         WHERE dv.id_venta IN (
+             SELECT id FROM ventas WHERE fecha BETWEEN ? AND ?
+         )
+         GROUP BY dv.id_producto, p.name
+         ORDER BY totalCantidad DESC
+         LIMIT 5`,
+		from, to,
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	defer rows.Close()
+
+	var stats []ProductoVend
+	for rows.Next() {
+		var pv ProductoVend
+		if err := rows.Scan(&pv.IDProducto, &pv.Nombre, &pv.TotalCantidad, &pv.Ingresos); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		stats = append(stats, pv)
+	}
+	c.JSON(http.StatusOK, stats)
+}
+
+// GET /api/usuarios/:cedula
+func getUsuarioByCedulax(c *gin.Context) {
+	cedula := c.Param("cedula")
+
+	var u Usuario
+	err := db.QueryRow(
+		"SELECT cedula, nombre, rol, user, notas FROM usuarios WHERE cedula = ?",
+		cedula,
+	).Scan(&u.Cedula, &u.Nombre, &u.Rol, &u.User, &u.Notas)
+
+	if err == sql.ErrNoRows {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Usuario no encontrado"})
+		return
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, u)
 }
 
 // Obtener un producto por ID
@@ -214,6 +369,65 @@ func deleteProducto(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Producto eliminado correctamente"})
+}
+
+// POST /api/login
+func login(c *gin.Context) {
+	var creds struct {
+		User string `json:"user"` // para admin: user; para cliente: cedula
+		Pass string `json:"pass"` // para admin: pass; para cliente: user (contraseña)
+	}
+	if err := c.ShouldBindJSON(&creds); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	type auth struct {
+		StoredPass string
+		Role       string
+		Cedula     string
+		Nombres    string
+	}
+	var a auth
+	var err error
+
+	// 1) Intentar en tabla usuarios (admin)
+	err = db.QueryRow(
+		"SELECT pass, 'admin' AS role, '' AS cedula, '' AS nombres FROM usuarios WHERE user = ?",
+		creds.User,
+	).Scan(&a.StoredPass, &a.Role, &a.Cedula, &a.Nombres)
+
+	if err == sql.ErrNoRows {
+		// 2) Intentar en tabla clientes
+		err = db.QueryRow(
+			"SELECT user, 'client' AS role, cedula, nombres FROM clientes WHERE cedula = ?",
+			creds.User,
+		).Scan(&a.StoredPass, &a.Role, &a.Cedula, &a.Nombres)
+		if err == sql.ErrNoRows {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuario o contraseña inválidos"})
+			return
+		} else if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 3) Comparar contraseñas
+	if a.StoredPass != creds.Pass {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuario o contraseña inválidos"})
+		return
+	}
+
+	// 4) Éxito: devolvemos role y, si es client, cedula/nombres
+	c.JSON(http.StatusOK, gin.H{
+		"user":    creds.User,
+		"role":    a.Role,
+		"cedula":  a.Cedula,
+		"nombres": a.Nombres,
+	})
 }
 
 // Obtener todos los usuarios
@@ -507,6 +721,22 @@ func getVentas(c *gin.Context) {
 
 	c.JSON(http.StatusOK, ventas)
 }
+
+// GET /api/ventas/max
+func getVentasMaxID(c *gin.Context) {
+	// Ejecuta la consulta para obtener el máximo id
+	row := db.QueryRow("SELECT MAX(id) AS ultimo_id FROM ventas")
+
+	var ultimoID int
+	if err := row.Scan(&ultimoID); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Devuelve solo el campo ultimo_id
+	c.JSON(http.StatusOK, gin.H{"id": ultimoID})
+}
+
 func getVentaByID(c *gin.Context) {
 	id := c.Param("id")
 	var v Venta
@@ -613,6 +843,7 @@ func getDetallesVenta(c *gin.Context) {
 
 	c.JSON(http.StatusOK, detalles)
 }
+
 func getDetalleByVentaID(c *gin.Context) {
 	id := c.Param("id_venta")
 	rows, err := db.Query("SELECT id_venta, id_producto, detalle, cantidad, precio_uni, sub_total FROM detalle_venta WHERE id_venta = ?", id)

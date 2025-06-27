@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>E–Commerce–Edyan</title>
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  >
+  <!-- Tu CSS -->
+   <link rel="stylesheet" href="/static/css/styleloguin.css"> 
+</head>
+<body>
+  <form id="loginForm" class="login-form" novalidate>
+    <h1>Login</h1>
+
+    <div class="form-field">
+      <i class="fas fa-user"></i>
+      <input
+        type="text"
+        name="username"
+        id="username"
+        pattern="^[a-zA-Z0-9_-]{1,16}$"
+        placeholder=" "
+        required
+      >
+      <label for="username">Username</label>
+    </div>
+
+    <div class="form-field">
+      <i class="fas fa-lock"></i>
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder=" "
+        required
+      >
+      <label for="password">Password</label>
+    </div>
+
+    <div id="errorMsg" class="error-msg">
+      Usuario o contraseña inválidos.
+    </div>
+
+    <button type="submit" class="btn">Login</button>
+   
+
+    <button
+      type="button"
+      class="btn"
+      id="btnClients"
+    >Crear cuenta</button>
+
+     <button
+      type="button"
+      class="btn"
+      id="btnCancelar"
+    >Cancelar</button>
+
+
+    
+  </form>
+
+  <!-- Tu JavaScript separado -->
+  <script src="/static/js/login.js"></script>
+</body>
+</html>

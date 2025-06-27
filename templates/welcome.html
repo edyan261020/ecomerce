@@ -1,338 +1,414 @@
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Comerce-Edyan</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-    <!-- Top Navigation -->
-    <div class="top-nav">
-        <div class="container">
-            <div class="left">
-                <span><i class="fas fa-phone"></i> 0987498260</span>
-                <span><i class="fas fa-envelope"></i> Edyan@ecomerce.com</span>
-            </div>
-            <div class="right">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a> 
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Header -->
-    <header class="main-header">
-        <div class="container">
-            <div class="logo">
-                <h1>E-Comerce<span>-Edyan</span></h1>
-            </div>
-            
-            <div class="search-box">
-                <input type="text" placeholder="Search products...">
-                <button><i class="fas fa-search"></i></button>
-            </div>
-            
-            <div class="user-actions">
-                
-                <a href="#" class="account"><i class="far fa-user"></i></a>
-                
-                     
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="main-nav">
-        <div class="container">
-            <ul>
-               <li class="nav-item">
-          <a class="nav-link active" href="/">Inicio</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/products">Tienda</a>
-        </li> 
-        <li class="nav-item">
-          <a class="nav-link" href="/sobre">Sobre nosotros</a>
-        </li>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>E-Comerce-Edyan</title>
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="/static/css/style.css">
+    </head>
+    <body>
         
-    </nav>
-
-    <!-- Mobile Menu Button -->
-    <div class="mobile-menu-btn">
-        <i class="fas fa-bars"></i>
-    </div>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-slider">
-            <div class="slide active" style="background-image: url('https://i.postimg.cc/pdC9G6Vk/copie-el-espacio-portatil-y-casco-de-realidad-virtual.jpg')">
-                <div class="container">
-                    <div class="slide-content">
-                        <span class="subtitle">Colecciones nuevas</span>
-                        <h2>Para toda ocacion</h2>
-                        <p>Disfrute de un descuento por su primera compra</p>
-                        <a href="#" class="btn">Comprar ahora</a>
-                    </div>
-                </div>
-            </div>
-            <div class="slide" style="background-image: url('https://i.postimg.cc/4xzHt3rD/productos-cosmeticos-en-fondo-liso.jpg')">
-                <div class="container">
-                    <div class="slide-content">
-                        <span class="subtitle">Edicion limitada</span>
-                        <h2>Accesorios top</h2>
-                        <p>Accesorios exclusivos para lucir genial</p>
-                        <a href="#" class="btn">Comprar ahora</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="slide" style="background-image: url('https://i.postimg.cc/bJvZK9sP/laptop-y-gafas-en-una-vista-superior-de-fondo-blanco.jpg')">
-                <div class="container">
-                    <div class="slide-content">
-                        <span class="subtitle">Edicion limitada</span>
-                        <h2>Articulos elegantes</h2>
-                        <p>Eleva tu estilo al maximo</p>
-                        <a href="#" class="btn">Shop Now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="slider-controls">
-            <button class="prev"><i class="fas fa-chevron-left"></i></button>
-            <button class="next"><i class="fas fa-chevron-right"></i></button>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features">
-        <div class="container">
-            <div class="feature-box">
-                <i class="fas fa-truck"></i>
-                <h3>Envio gratis</h3>
-                <p>En toda compra superior a $50</p>
-            </div>
-            <div class="feature-box">
-                <i class="fas fa-undo"></i>
-                <h3>Se realizan reembolsos</h3>
-                <p>Politica de 30 dias maximo</p>
-            </div>
-            <div class="feature-box">
-                <i class="fas fa-lock"></i>
-                <h3>Metodos de pago seguros</h3>
-                <p>100% seguro</p>
-            </div>
-            <div class="feature-box">
-                <i class="fas fa-headset"></i>
-                <h3>Soporte 24/7</h3>
-                <p>Soporte especializado</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Categories Section -->
-    <section class="categories">
-        <div class="container">
-            <h2 class="section-title">Comprar por categoria</h2>
-            <div class="category-grid">
-                <div class="category-card">
-                    <img src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Men's Fashion">
-                    <div class="category-info">
-                        <h3>Moda para Hombre</h3>
-                        <a href="#">Comprar ahora <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="category-card">
-                    <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Women's Fashion">
-                    <div class="category-info">
-                        <h3>Moda para Mujer</h3>
-                        <a href="#">Comprar ahora <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="category-card">
-                    <img src="https://images.unsplash.com/photo-1595341888016-a392ef81b7de?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1479&q=80" alt="Electronics">
-                    <div class="category-info">
-                        <h3>Electronicos</h3>
-                        <a href="#">Comprar ahora <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="category-card">
-                    <img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1528&q=80" alt="Home & Garden">
-                    <div class="category-info">
-                        <h3>Hogar</h3>
-                        <a href="#">Comprar ahora <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Banner Section -->
-    <section class="banner">
-        <div class="container">
-            <div class="banner-content">
-                <span class="subtitle">Oferta por tiempo limitado</span>
-                <h2>Ventas de verano</h2>
-                <p>Hasta el 50% de descuento hasta agotar stock</p>
-                <a href="#" class="btn">Comprar ahora </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="testimonials">
-        <div class="container">
-            <h2 class="section-title">Algunos clientes dicen:</h2>
-            <div class="testimonial-slider">
-                <div class="testimonial active">
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <p>"¡Me encanta comprar en ShopEasy! La calidad de los productos es increíble y la entrega fue rapidísima. ¡Sin duda volveré a comprar aquí!"</p>
-                    <div class="customer">
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Marian Samora">
-                        <h4>Marian Samora</h4>
-                    </div>
-                </div>
-                <div class="testimonial">
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <p>"El servicio al cliente es excepcional. Me ayudaron con mi pedido y se aseguraron de que quedara completamente satisfecho. ¡Muy recomendable!"</p>
-                    <div class="customer">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Tomas Cordova">
-                        <h4>Tomas Cordova</h4>
-                    </div>
-                </div>
-                <div class="testimonial">
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="far fa-star"></i>
-                    </div>
-                    <p>"Gran selección de productos a precios competitivos. El sitio web es fácil de navegar y el proceso de compra fue rapidísimo."</p>
-                    <div class="customer">
-                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Mel Jaramillo">
-                        <h4>Mel Jaramillo</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="slider-dots">
-                <span class="dot active"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Newsletter Section -->
-   <section class="newsletter" style="background-color: #424242; padding: 40px 0;">
-
-        <div class="container">
-            <div class="newsletter-content">
-                <h2>Subscribete para recibir novedades</h2>
-                <p>Obtenga las últimas actualizaciones sobre nuevos productos y próximas ventas.</p>
-                <form>
-                    <input type="email" placeholder="Your email address">
-                    <button type="submit" class="btn">Subscribirme</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="main-footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h3>E-Comerce-Edyan</h3>
-                    <p>Su solución integral para todas sus necesidades. Ofrecemos productos de alta calidad a precios accesibles y un excelente servicio al cliente.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-pinterest"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                <div class="footer-col">
-                    <h3>Links</h3>
-                    <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">productos</a></li>
-                        <li><a href="#">Sobre nosostros</a></li> 
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h3>Servicios personalizados</h3>
-                    <ul>
-                       
-                        <li><a href="#">Verficar Tracking</a></li>
-                        <li><a href="#">Lista de deseos</a></li>
-                        <li><a href="#">Politicas</a></li> 
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h3>Contact Us</h3>
-                    <ul class="contact-info">
-                        <li><i class="fas fa-map-marker-alt"></i> Ecuador</li>
-                        <li><i class="fas fa-phone"></i> +593 987498260</li>
-                        <li><i class="fas fa-envelope"></i> edyan@ecomerce.com</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="copyright">
+        <div class="top-nav">
             <div class="container">
-                <p>&copy; 2023 E-Comerce-Edyan. All Rights Reserved.</p>
-                <div class="payment-methods">
-                    <i class="fab fa-cc-visa"></i>
-                    <i class="fab fa-cc-mastercard"></i>
-                    <i class="fab fa-cc-amex"></i>
-                    <i class="fab fa-cc-paypal"></i>
-                    <i class="fab fa-cc-apple-pay"></i>
+                <div class="left">
+                    <span><i class="fas fa-phone"></i> 0987498260</span>
+                    <span><i class="fas fa-envelope"></i>
+                        Edyan@ecomerce.com</span>
+                </div>
+                <div class="right">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
         </div>
-    </footer>
 
-    <!-- Shopping Cart Sidebar -->
-    <div class="cart-sidebar" id="cart-sidebar">
-        <div class="cart-header">
-            <h3>Your Cart</h3>
-            <button class="close-cart" id="close-cart"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="cart-items" id="cart-items">
-            <!-- Cart items will be loaded here -->
-            <div class="empty-cart">
-                <i class="fas fa-shopping-cart"></i>
-                <p>Tu carrito esta vacio</p>
-            </div>
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                <span>Total:</span>
-                <span class="total-price">$0.00</span>
-            </div>
-            <a href="#" class="btn checkout-btn">Proceder con el pedido</a>
-            
-        </div>
-    </div>
-    <div class="cart-overlay" id="cart-overlay"></div>
+         
+        <header class="main-header">
+            <div class="container">
+                <div class="logo">
+                    <h1>E-Comerce<span>-Edyan</span></h1>
+                </div>
 
-    <script src="/static/js/script.js"></script>
-</body>
-</html>
+                <div class="search-box">
+                    <input type="text" placeholder="Search products...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+
+                <div class="user-actions">
+                    <a href="javascript:void(0)" class="account"
+                        id="accountIcon">
+                        <i class="far fa-user"></i>
+                    </a>
+                </div>
+
+                <script>
+  document.getElementById('accountIcon').addEventListener('click', () => {
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const role     = localStorage.getItem('role');
+
+    if (!loggedIn) {
+ 
+      return window.location.href = '/login';
+    }
+
+    if (role === 'admin') {
+   
+      return window.location.href = '/admin';
+    }
+
+    if (role === 'client') {
+       alert('Sesion cerrada correctamente');
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('role');
+      localStorage.removeItem('clienteCedula');
+      localStorage.removeItem('clienteNombres');
+      return window.location.href = '/login';
+    }
+
+ 
+    window.location.href = '/login';
+  });
+</script>
+            </div>
+        </header>
+
+ 
+        <nav class="main-nav">
+            <div class="container">
+                <ul>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products">Tienda</a>
+                    </li>
+
+                </nav>
+
+           
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+
+        
+                <section class="hero">
+                    <div class="hero-slider">
+                        <div class="slide active"
+                            style="background-image: url('https://i.postimg.cc/pdC9G6Vk/copie-el-espacio-portatil-y-casco-de-realidad-virtual.jpg')">
+                            <div class="container">
+                                <div class="slide-content">
+                                    <span class="subtitle">Colecciones
+                                        nuevas</span>
+                                    <h2>Para toda ocacion</h2>
+                                    <p>Disfrute de un descuento por su primera
+                                        compra</p>
+                                    <a href="/products" class="btn">Comprar
+                                        ahora</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide"
+                            style="background-image: url('https://i.postimg.cc/4xzHt3rD/productos-cosmeticos-en-fondo-liso.jpg')">
+                            <div class="container">
+                                <div class="slide-content">
+                                    <span class="subtitle">Edicion
+                                        limitada</span>
+                                    <h2>Accesorios top</h2>
+                                    <p>Accesorios exclusivos para lucir
+                                        genial</p>
+                                    <a href="/products" class="btn">Comprar
+                                        ahora</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slide"
+                            style="background-image: url('https://i.postimg.cc/bJvZK9sP/laptop-y-gafas-en-una-vista-superior-de-fondo-blanco.jpg')">
+                            <div class="container">
+                                <div class="slide-content">
+                                    <span class="subtitle">Edicion
+                                        limitada</span>
+                                    <h2>Articulos elegantes</h2>
+                                    <p>Eleva tu estilo al maximo</p>
+                                    <a href="/products" class="btn">Comprar
+                                        ahora</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-controls">
+                        <button class="prev"><i
+                                class="fas fa-chevron-left"></i></button>
+                        <button class="next"><i
+                                class="fas fa-chevron-right"></i></button>
+                    </div>
+                </section>
+
+        
+                <section class="features">
+                    <div class="container">
+                        <div class="feature-box">
+                            <i class="fas fa-truck"></i>
+                            <h3>Envio gratis</h3>
+                            <p>En toda compra superior a $50</p>
+                        </div>
+                        <div class="feature-box">
+                            <i class="fas fa-undo"></i>
+                            <h3>Se realizan reembolsos</h3>
+                            <p>Politica de 30 dias maximo</p>
+                        </div>
+                        <div class="feature-box">
+                            <i class="fas fa-lock"></i>
+                            <h3>Metodos de pago seguros</h3>
+                            <p>100% seguro</p>
+                        </div>
+                        <div class="feature-box">
+                            <i class="fas fa-headset"></i>
+                            <h3>Soporte 24/7</h3>
+                            <p>Soporte especializado</p>
+                        </div>
+                    </div>
+                </section>
+
+ 
+                <section class="categories">
+                    <div class="container">
+                        <h2 class="section-title">Comprar por categoria</h2>
+                        <div class="category-grid">
+                            <div class="category-card">
+                                <img
+                                    src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                                    alt="Men's Fashion">
+                                <div class="category-info">
+                                    <h3>Moda para Hombre</h3>
+                                    <a href="/products">Comprar ahora <i
+                                            class="fas fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                            <div class="category-card">
+                                <img
+                                    src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                                    alt="Women's Fashion">
+                                <div class="category-info">
+                                    <h3>Moda para Mujer</h3>
+                                    <a href="/products">Comprar ahora <i
+                                            class="fas fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                            <div class="category-card">
+                                <img
+                                    src="https://images.unsplash.com/photo-1595341888016-a392ef81b7de?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1479&q=80"
+                                    alt="Electronics">
+                                <div class="category-info">
+                                    <h3>Electronicos</h3>
+                                    <a href="/products">Comprar ahora <i
+                                            class="fas fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                            <div class="category-card">
+                                <img
+                                    src="https://images.unsplash.com/photo-1592078615290-033ee584e267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1528&q=80"
+                                    alt="Home & Garden">
+                                <div class="category-info">
+                                    <h3>Hogar</h3>
+                                    <a href="/products">Comprar ahora <i
+                                            class="fas fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+ 
+                <section class="banner">
+                    <div class="container">
+                        <div class="banner-content">
+                            <span class="subtitle">Oferta por tiempo
+                                limitado</span>
+                            <h2>Ventas de verano</h2>
+                            <p>Hasta el 50% de descuento hasta agotar stock</p>
+                            <a href="/products" class="btn">Comprar ahora </a>
+                        </div>
+                    </div>
+                </section>
+
+     
+                <section class="testimonials">
+                    <div class="container">
+                        <h2 class="section-title">Algunos clientes dicen:</h2>
+                        <div class="testimonial-slider">
+                            <div class="testimonial active">
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p>"¡Me encanta comprar en ShopEasy! La calidad de los productos es increíble y la entrega fue rapidísima. ¡Sin duda volveré a comprar aquí!"</p>
+                                <div class="customer">
+                                    <img
+                                        src="https://randomuser.me/api/portraits/women/44.jpg"
+                                        alt="Marian Samora">
+                                    <h4>Marian Samora</h4>
+                                </div>
+                            </div>
+                            <div class="testimonial">
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p>"El servicio al cliente es excepcional. Me ayudaron con mi pedido y se aseguraron de que quedara completamente satisfecho. ¡Muy recomendable!"</p>
+                                <div class="customer">
+                                    <img
+                                        src="https://randomuser.me/api/portraits/men/32.jpg"
+                                        alt="Tomas Cordova">
+                                    <h4>Tomas Cordova</h4>
+                                </div>
+                            </div>
+                            <div class="testimonial">
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <p>"Gran selección de productos a precios competitivos. El sitio web es fácil de navegar y el proceso de compra fue rapidísimo."</p>
+                                <div class="customer">
+                                    <img
+                                        src="https://randomuser.me/api/portraits/women/68.jpg"
+                                        alt="Mel Jaramillo">
+                                    <h4>Mel Jaramillo</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slider-dots">
+                            <span class="dot active"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                    </div>
+                </section>
+
+ 
+                <section class="newsletter"
+                    style="background-color: #424242; padding: 40px 0;">
+
+                    <div class="container">
+                        <div class="newsletter-content">
+                            <h2>Subscribete para recibir novedades</h2>
+                            <p>Obtenga las últimas actualizaciones sobre nuevos
+                                productos y próximas ventas.</p>
+                            <form>
+                                <input type="email"
+                                    placeholder="Your email address">
+                                <button type="submit"
+                                    class="btn">Subscribirme</button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+  
+                <footer class="main-footer">
+                    <div class="container">
+                        <div class="footer-grid">
+                            <div class="footer-col">
+                                <h3>E-Comerce-Edyan</h3>
+                                <p>Su solución integral para todas sus
+                                    necesidades. Ofrecemos productos de alta
+                                    calidad a precios accesibles y un excelente
+                                    servicio al cliente.</p>
+                                <div class="social-links">
+                                    <a href="#"><i
+                                            class="fab fa-facebook-f"></i></a>
+                                    <a href="#"><i
+                                            class="fab fa-twitter"></i></a>
+                                    <a href="#"><i
+                                            class="fab fa-instagram"></i></a>
+                                    <a href="#"><i
+                                            class="fab fa-pinterest"></i></a>
+                                    <a href="#"><i
+                                            class="fab fa-youtube"></i></a>
+                                </div>
+                            </div>
+                            <div class="footer-col">
+                                <h3>Links</h3>
+                                <ul>
+                                    <li><a href="#">Home</a></li>
+                                    <li><a href="#">productos</a></li>
+                                    <li><a href="#">Sobre nosostros</a></li>
+                                </ul>
+                            </div>
+                            <div class="footer-col">
+                                <h3>Servicios personalizados</h3>
+                                <ul>
+
+                                    <li><a href="#">Verficar Tracking</a></li>
+                                    <li><a href="#">Lista de deseos</a></li>
+                                    <li><a href="#">Politicas</a></li>
+                                </ul>
+                            </div>
+                            <div class="footer-col">
+                                <h3>Contact Us</h3>
+                                <ul class="contact-info">
+                                    <li><i class="fas fa-map-marker-alt"></i>
+                                        Ecuador</li>
+                                    <li><i class="fas fa-phone"></i> +593
+                                        987498260</li>
+                                    <li><i class="fas fa-envelope"></i>
+                                        edyan@ecomerce.com</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="copyright">
+                        <div class="container">
+                            <p>&copy; 2023 E-Comerce-Edyan. All Rights
+                                Reserved.</p>
+                            <div class="payment-methods">
+                                <i class="fab fa-cc-visa"></i>
+                                <i class="fab fa-cc-mastercard"></i>
+                                <i class="fab fa-cc-amex"></i>
+                                <i class="fab fa-cc-paypal"></i>
+                                <i class="fab fa-cc-apple-pay"></i>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+
+       
+                <div class="cart-sidebar" id="cart-sidebar">
+                    <div class="cart-header">
+                        <h3>Your Cart</h3>
+                        <button class="close-cart" id="close-cart"><i
+                                class="fas fa-times"></i></button>
+                    </div>
+                    <div class="cart-items" id="cart-items">
+                  
+                        <div class="empty-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>Tu carrito esta vacio</p>
+                        </div>
+                    </div>
+                    <div class="cart-footer">
+                        <div class="cart-total">
+                            <span>Total:</span>
+                            <span class="total-price">$0.00</span>
+                        </div>
+                        <a href="#" class="btn checkout-btn">Proceder con el
+                            pedido</a>
+
+                    </div>
+                </div>
+                <div class="cart-overlay" id="cart-overlay"></div>
+
+                <script src="/static/js/script.js"></script>
+            </body>
+        </html>
